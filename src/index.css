@@ -42,7 +42,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #f6cfff;
+  background-color: oklch(82.8% 0.111 230.318);
   cursor: pointer;
   transition: border-color 0.25s;
 }

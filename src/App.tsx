@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 import { Grid } from "./components/Grid";
 
@@ -25,16 +25,49 @@ const randomGrid = (): (number | null)[][] => {
 function App() {
   const [gridNums, setGridNums] = useState<(number | null)[][]>(randomGrid());
   const [score, setScore] = useState(0);
+  const [timer, setTimer] = useState(30);
+  const [running, setRunning] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const refreshPuzzle = () => {
+    if (timer == 0) return;
+
     setGridNums(randomGrid());
     setScore(score + 1);
+
+    if (!running) {
+      startTimer();
+      setRunning(true);
+    }
+  };
+
+  const startTimer = () => {
+    setTimer(30);
+    intervalRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current!);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   return (
-    <div className="bg-indigo-900 min-h-screen flex flex-col justify-center items-center gap-10">
-      <div className="text-2xl font-bold text-fuchsia-50">Score: {score}</div>
-      <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
+    <div className="bg-indigo-900 min-h-screen flex flex-col justify-around items-center gap-10">
+      <div className="text-center">
+        <div className="text-xl font-bold text-fuchsia-200">
+          Seconds: {timer}
+        </div>
+      </div>
+      <div>
+        <div className="text-center my-4 text-2xl font-bold text-fuchsia-50">
+          Score: {score}
+        </div>
+        <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
+      </div>
+      <div></div>
     </div>
   );
 }

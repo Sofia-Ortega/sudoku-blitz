@@ -17,15 +17,14 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
     const digit = input.slice(-1);
 
     if (/^\d$/.test(digit)) {
-      if (digit === ans.toString()) {
-        refreshPuzzle();
-        return;
-      }
+      setWrong(digit != ans.toString());
 
+      if (digit === ans.toString()) {
+        console.log("correct");
+        refreshPuzzle();
+        setValue("");
+      }
       setValue(digit);
-      setWrong(true);
-    } else {
-      setValue(""); // Clear invalid input
     }
   };
 
@@ -46,7 +45,7 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
           onChange={handleChange}
           // maxLength={1}
           className={`w-full h-full text-center text-4xl outline-none border-none bg-fuchsia-100 ${
-            wrong && value && "text-red-500 "
+            wrong && value ? "text-red-500 " : "text-black"
           }`}
         />
       ) : (
