@@ -24,11 +24,17 @@ const randomGrid = (): (number | null)[][] => {
 
 function App() {
   const [gridNums, setGridNums] = useState<(number | null)[][]>(randomGrid());
+  const [score, setScore] = useState(0);
+
+  const refreshPuzzle = () => {
+    setGridNums(randomGrid());
+    setScore(score + 1);
+  };
 
   return (
-    <div className="bg-violet-400 min-h-screen flex flex-col justify-center items-center gap-10">
-      <Grid gridNums={gridNums} />
-      <button onClick={() => setGridNums(randomGrid())}>Click me</button>
+    <div className="bg-indigo-900 min-h-screen flex flex-col justify-center items-center gap-10">
+      <div className="text-2xl font-bold text-fuchsia-50">Score: {score}</div>
+      <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
     </div>
   );
 }

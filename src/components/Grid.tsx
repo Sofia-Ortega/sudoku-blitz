@@ -1,20 +1,36 @@
 import { Box } from "./Box";
 
-function Row({ row }: { row: number[] }) {
+interface RowProps {
+  row: (number | null)[];
+  refreshPuzzle: () => void;
+  ans: number;
+}
+
+function Row({ row, refreshPuzzle, ans }: RowProps) {
   return (
     <div className="flex">
       {row.map((num) => (
-        <Box key={num} num={num} />
+        <Box key={num} num={num} refreshPuzzle={refreshPuzzle} ans={ans} />
       ))}
     </div>
   );
 }
 
-export function Grid({ gridNums }: { gridNums: (number | null)[][] }) {
+interface GridProps {
+  gridNums: (number | null)[][];
+  refreshPuzzle: () => void;
+}
+
+export function Grid({ gridNums, refreshPuzzle }: GridProps) {
+  const flatGrid = gridNums.flat();
+
+  let ans = 45;
+  flatGrid.forEach((n) => n && (ans -= n));
+
   return (
     <div className="bg-fuchsia-200">
       {gridNums.map((row) => (
-        <Row row={row} />
+        <Row row={row} ans={ans} refreshPuzzle={refreshPuzzle} />
       ))}
     </div>
   );

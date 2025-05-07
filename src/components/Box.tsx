@@ -1,11 +1,57 @@
+import { useEffect, useRef, useState } from "react";
+
 interface Props {
   num: number | null;
+  refreshPuzzle: () => void;
+  ans: number;
 }
+export function Box({ num, refreshPuzzle, ans }: Props) {
+  const [value, setValue] = useState("");
+  const [wrong, setWrong] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-export function Box({ num }: Props) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+
+    // Take only the last digit if multiple are typed/pasted
+    const digit = input.slice(-1);
+
+    if (/^\d$/.test(digit)) {
+      if (digit === ans.toString()) {
+        refreshPuzzle();
+        return;
+      }
+
+      setValue(digit);
+      setWrong(true);
+    } else {
+      setValue(""); // Clear invalid input
+    }
+  };
+
+  useEffect(() => {
+    if (num === null && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select(); // Select existing content
+    }
+  }, [num]);
+
   return (
-    <div className=" hover:bg-fuchsia-50 text-3xl w-32 h-32 border-1  flex justify-center items-center">
-      <div>{num ? num : ""}</div>
+    <div className="w-32 h-32 border border-indigo-900 flex justify-center items-center">
+      {num === null ? (
+        <input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={handleChange}
+          // maxLength={1}
+          className={`w-full h-full text-center text-4xl outline-none border-none bg-fuchsia-100 ${
+            wrong && value && "text-red-500 "
+          }`}
+        />
+      ) : (
+        <div className="text-4xl">{num}</div>
+      )}
     </div>
   );
 }
