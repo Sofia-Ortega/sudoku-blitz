@@ -28,7 +28,7 @@ export function Grid({ gridNums, refreshPuzzle }: GridProps) {
   flatGrid.forEach((n) => n && (ans -= n));
 
   return (
-    <div className="bg-fuchsia-200">
+    <div className="bg-sky-50 rounded-xl overflow-hidden border border-amber-100">
       {gridNums.map((row) => (
         <Row row={row} ans={ans} refreshPuzzle={refreshPuzzle} />
       ))}

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import "./App.css";
 import { Grid } from "./components/Grid";
+import Dropdown from "./components/Dropdown";
 
 const randomGrid = (): (number | null)[][] => {
   let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -55,16 +56,13 @@ function App() {
   };
 
   return (
-    <div className="bg-indigo-900 min-h-screen flex flex-col justify-around items-center gap-10">
-      <div className="text-center">
-        <div className="text-xl font-bold text-fuchsia-200">
-          Seconds: {timer}
-        </div>
+    <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
+      <div className="text-xl text-center">Sudoku Blitz</div>
+      <div className="flex items-center gap-2">
+        <div className="font-bold text-slate-700">time:</div>
+        <Dropdown options={["15", "30", "45"]} />
       </div>
       <div>
-        <div className="text-center my-4 text-2xl font-bold text-fuchsia-50">
-          Score: {score}
-        </div>
         <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
       </div>
       <div></div>

@@ -36,7 +36,7 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
   }, [num]);
 
   return (
-    <div className="w-32 h-32 border border-indigo-900 flex justify-center items-center">
+    <div className="w-32 h-32 border border-blue-900 flex justify-center items-center">
       {num === null ? (
         <input
           ref={inputRef}
@@ -44,9 +44,7 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
           value={value}
           onChange={handleChange}
           // maxLength={1}
-          className={`w-full h-full text-center text-4xl outline-none border-none bg-fuchsia-100 ${
-            wrong && value ? "text-red-500 " : "text-black"
-          }`}
+          className={`w-full h-full text-center text-4xl outline-none border-none  `}
         />
       ) : (
         <div className="text-4xl">{num}</div>
