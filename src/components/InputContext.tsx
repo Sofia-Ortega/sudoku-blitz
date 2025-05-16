@@ -8,17 +8,17 @@ import {
 } from "react";
 
 type InputContextType = {
-  inputNumber: string;
-  setInputNumber: Dispatch<SetStateAction<string>>;
+  userInput: string;
+  setUserInput: Dispatch<SetStateAction<string>>;
 };
 
 const InputContext = createContext<InputContextType | undefined>(undefined);
 
 export function InputProvider({ children }: { children: ReactNode }) {
-  const [inputNumber, setInputNumber] = useState<string>("");
+  const [userInput, setUserInput] = useState<string>("");
 
   return (
-    <InputContext.Provider value={{ inputNumber, setInputNumber }}>
+    <InputContext.Provider value={{ userInput, setUserInput }}>
       {children}
     </InputContext.Provider>
   );

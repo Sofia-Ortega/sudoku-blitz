@@ -7,14 +7,14 @@ interface Props {
   ans: number;
 }
 export function GridBox({ num, refreshPuzzle, ans }: Props) {
-  const { inputNumber, setInputNumber } = useInput();
+  const { userInput, setUserInput } = useInput();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
 
     if (input == "") {
-      setInputNumber("");
+      setUserInput("");
       return;
     }
 
@@ -25,9 +25,9 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
       if (digit === ans.toString()) {
         console.log("correct");
         refreshPuzzle();
-        setInputNumber("");
+        setUserInput("");
       }
-      setInputNumber(digit);
+      setUserInput(digit);
     }
   };
 
@@ -48,7 +48,7 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
         <input
           ref={inputRef}
           type="text"
-          value={inputNumber}
+          value={userInput}
           onChange={handleChange}
           className={`w-full h-full text-center text-4xl outline-none border-none  `}
         />

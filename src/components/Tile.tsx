@@ -5,9 +5,9 @@ interface TileProps {
 }
 
 export default function Tile({ num }: TileProps) {
-  const { setInputNumber } = useInput();
+  const { setUserInput } = useInput();
   const handleClick = () => {
-    setInputNumber(`${num}`);
+    setUserInput(`${num}`);
   };
   return (
     <div
