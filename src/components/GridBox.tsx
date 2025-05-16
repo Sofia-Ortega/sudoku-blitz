@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useInput } from "./InputContext";
 
 interface Props {
   num: number | null;
@@ -6,14 +7,14 @@ interface Props {
   ans: number;
 }
 export function GridBox({ num, refreshPuzzle, ans }: Props) {
-  const [value, setValue] = useState("");
+  const { inputNumber, setInputNumber } = useInput();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
 
     if (input == "") {
-      setValue("");
+      setInputNumber("");
       return;
     }
 
@@ -24,9 +25,9 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
       if (digit === ans.toString()) {
         console.log("correct");
         refreshPuzzle();
-        setValue("");
+        setInputNumber("");
       }
-      setValue(digit);
+      setInputNumber(digit);
     }
   };
 
@@ -38,12 +39,16 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
   }, [num]);
 
   return (
-    <div className={`w-32 h-32 flex justify-center items-center bg-sky-50 `}>
+    <div
+      className={`w-32 h-32 flex justify-center items-center  ${
+        num == null ? "text-violet-800 font-bold bg-indigo-200" : "bg-sky-50"
+      }`}
+    >
       {num === null ? (
         <input
           ref={inputRef}
           type="text"
-          value={value}
+          value={inputNumber}
           onChange={handleChange}
           className={`w-full h-full text-center text-4xl outline-none border-none  `}
         />

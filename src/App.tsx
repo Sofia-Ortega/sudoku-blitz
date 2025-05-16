@@ -3,6 +3,7 @@ import "./App.css";
 import { Grid } from "./components/Grid";
 import Dropdown from "./components/Dropdown";
 import { Tiles } from "./components/Tiles";
+import { InputProvider } from "./components/InputContext";
 
 const randomGrid = (): (number | null)[] => {
   let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -51,19 +52,21 @@ function App() {
   };
 
   return (
-    <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
-      <div className="text-xl text-center">Sudoku Blitz</div>
-      <div className="flex flex-col justify-center items-center gap-4">
-        <div className="flex items-center gap-2">
-          <div className="font-bold text-slate-700">time:</div>
-          <Dropdown options={["15", "30", "45"]} />
+    <InputProvider>
+      <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
+        <div className="text-xl text-center">Sudoku Blitz</div>
+        <div className="flex flex-col justify-center items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="font-bold text-slate-700">time:</div>
+            <Dropdown options={["15", "30", "45"]} />
+          </div>
+          <div>
+            <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
+          </div>
         </div>
-        <div>
-          <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
-        </div>
+        <Tiles />
       </div>
-      <Tiles />
-    </div>
+    </InputProvider>
   );
 }
 
