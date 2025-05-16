@@ -3,7 +3,7 @@ import "./App.css";
 import { Grid } from "./components/Grid";
 import Dropdown from "./components/Dropdown";
 
-const randomGrid = (): (number | null)[][] => {
+const randomGrid = (): (number | null)[] => {
   let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const missingIndex = Math.floor(Math.random() * digits.length);
@@ -14,17 +14,11 @@ const randomGrid = (): (number | null)[][] => {
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 
-  const grid: (number | null)[][] = [
-    shuffled.slice(0, 3),
-    shuffled.slice(3, 6),
-    shuffled.slice(6, 9),
-  ];
-
-  return grid;
+  return shuffled;
 };
 
 function App() {
-  const [gridNums, setGridNums] = useState<(number | null)[][]>(randomGrid());
+  const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(30);
   const [running, setRunning] = useState(false);
