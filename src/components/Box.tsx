@@ -2,13 +2,16 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   num: number | null;
+  index: number;
   refreshPuzzle: () => void;
   ans: number;
 }
-export function Box({ num, refreshPuzzle, ans }: Props) {
+export function Box({ num, index, refreshPuzzle, ans }: Props) {
   const [value, setValue] = useState("");
-  const [wrong, setWrong] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const showRightBorder = (index + 1) % 3 != 0;
+  const showBottomBorder = index < 6;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
@@ -17,8 +20,6 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
     const digit = input.slice(-1);
 
     if (/^\d$/.test(digit)) {
-      setWrong(digit != ans.toString());
-
       if (digit === ans.toString()) {
         console.log("correct");
         refreshPuzzle();
@@ -36,7 +37,12 @@ export function Box({ num, refreshPuzzle, ans }: Props) {
   }, [num]);
 
   return (
-    <div className="w-32 h-32 border border-blue-900 flex justify-center items-center">
+    <div
+      className={`w-32 h-32 flex justify-center items-center  
+        ${showRightBorder ? "border-r" : ""} 
+        ${showBottomBorder ? "border-b" : ""} 
+        border-blue-70`}
+    >
       {num === null ? (
         <input
           ref={inputRef}
