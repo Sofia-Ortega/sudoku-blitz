@@ -1,4 +1,4 @@
-import { Box } from "./Box";
+import { GridBox } from "./GridBox";
 interface GridProps {
   gridNums: (number | null)[];
   refreshPuzzle: () => void;
@@ -9,15 +9,9 @@ export function Grid({ gridNums, refreshPuzzle }: GridProps) {
   gridNums.forEach((n) => n && (ans -= n));
 
   return (
-    <div className="bg-sky-50 rounded-xl overflow-hidden grid grid-cols-3  gap-4 p-4">
-      {gridNums.map((num, index) => (
-        <Box
-          key={num}
-          num={num}
-          index={index}
-          refreshPuzzle={refreshPuzzle}
-          ans={ans}
-        />
+    <div className=" rounded-2xl overflow-hidden grid grid-cols-3 gap-1 shadow-sm">
+      {gridNums.map((num) => (
+        <GridBox key={num} num={num} refreshPuzzle={refreshPuzzle} ans={ans} />
       ))}
     </div>
   );
