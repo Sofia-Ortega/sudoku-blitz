@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Arrow from "./ArrowSvg";
 import DropDownOptions from "./DropDownOptions";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 
 interface DropdownProps {}
 
@@ -38,6 +38,7 @@ export default function Timer({}: DropdownProps) {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
+  const [width, setWidth] = useState<number>(12);
 
   const [playing, setPlaying] = useState(false);
 
@@ -49,6 +50,25 @@ export default function Timer({}: DropdownProps) {
   const handleSelect = (option: number) => {
     setSelected(option);
     setIsOpen(false);
+  };
+
+  const animBorder = {
+    inital: { width: "100%", height: "0.5px" },
+    open: {
+      width: "100%",
+      height: "0.5px",
+      transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+    },
+    closed: {
+      width: `${width}px`,
+      height: "8px",
+      transition: {
+        type: "spring",
+        stiffness: 200,
+        damping: 20,
+      },
+    },
+    // width: `${width}px`,
   };
 
   return (
@@ -63,12 +83,17 @@ export default function Timer({}: DropdownProps) {
         </motion.div>
         <div></div>
 
-        <motion.div transition={{ duration: 0.4 }} className="mx-2">
+        <motion.div
+          transition={{ duration: 0.4 }}
+          className="mx-2 relative py-2 flex flex-col justify-center items-center"
+        >
           <div
+            className={`flex justify-between items-center font-bold text-blue-800 text-5xl select-none ${
+              !playing ? "cursor-pointer" : ""
+            }`}
             onClick={handleTimerClick}
-            className="flex gap-2 justify-between items-center w-full border-b border-slate-700 font-bold text-blue-800 text-5xl py-2 bg-none cursor-pointer select-none "
           >
-            <span>{selected}</span>
+            <span className="mx-2 ">{selected}</span>
             <motion.div
               variants={animArrow}
               animate={!playing ? "open" : "closed"}
@@ -76,6 +101,11 @@ export default function Timer({}: DropdownProps) {
               <Arrow isOpen={isOpen} />
             </motion.div>
           </div>
+          <motion.div
+            variants={animBorder}
+            animate={!playing ? "open" : "closed"}
+            className="align-middle bg-slate-600 my-2"
+          />
 
           {isOpen && (
             <DropDownOptions
@@ -88,6 +118,20 @@ export default function Timer({}: DropdownProps) {
       <button onClick={() => setPlaying(!playing)}>
         click me {playing ? "t" : "f"}
       </button>
+      <div>
+        <button
+          className="bg-sky-700 text-white px-2 rounded-sm mx-2"
+          onClick={() => setWidth(width + 50)}
+        >
+          ADD WIDTh
+        </button>
+        <button
+          className="bg-sky-700 text-white px-2 rounded-sm mx-2"
+          onClick={() => setWidth(width - 50)}
+        >
+          REMOVE WIDTh
+        </button>
+      </div>
     </div>
   );
 }
