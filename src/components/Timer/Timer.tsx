@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface DropdownProps {
-  options: string[];
+  options: number[];
+  selected: number;
+  setSelected: Dispatch<SetStateAction<number>>;
 }
 
-export default function Dropdown({ options }: DropdownProps) {
+export default function Timer({
+  options,
+  selected,
+  setSelected,
+}: DropdownProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>(options[0]);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  const handleSelect = (option: string) => {
+  const handleSelect = (option: number) => {
     setSelected(option);
     setIsOpen(false);
   };
@@ -19,7 +24,7 @@ export default function Dropdown({ options }: DropdownProps) {
     <div className="relative inline-block text-left">
       <button
         onClick={toggleDropdown}
-        className="flex gap-2 justify-between items-center w-full border-b border-slate-700 font-bold text-blue-800 text-5xl py-2 bg-none"
+        className="flex gap-2 justify-between items-center w-full border-b border-slate-700 font-bold text-blue-800 text-5xl py-2 bg-none cursor-pointer"
       >
         <span>{selected}</span>
         <svg
@@ -38,12 +43,12 @@ export default function Dropdown({ options }: DropdownProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white shadow-md rounded-md border border-slate-200">
+        <div className="absolute z-10 mt-1 w-full bg-white shadow-md rounded-md border border-slate-50">
           {options.map((option) => (
             <div
               key={option}
               onClick={() => handleSelect(option)}
-              className="px-4 py-2 hover:bg-slate-100 cursor-pointer text-blue-800"
+              className="px-4 py-2 hover:bg-slate-100 cursor-pointer text-blue-800 transition-colors duration-400 text-center"
             >
               {option}
             </div>

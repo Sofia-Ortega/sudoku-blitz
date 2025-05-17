@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import "./App.css";
-import { Grid } from "./components/Grid";
-import Dropdown from "./components/Dropdown";
-import { Tiles } from "./components/Tiles";
+import { Grid } from "./components/Grid/Grid";
+import Timer from "./components/Timer/Timer";
+import { Tiles } from "./components/Tiles/Tiles";
 import { InputProvider } from "./components/InputContext";
 
 const randomGrid = (): (number | null)[] => {
@@ -20,6 +20,8 @@ const randomGrid = (): (number | null)[] => {
 };
 
 function App() {
+  const TIMER_OPTIONS = [15, 30, 45, 60];
+
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(30);
@@ -39,16 +41,16 @@ function App() {
   };
 
   const startTimer = () => {
-    setTimer(30);
-    intervalRef.current = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current!);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // setTimer(30);
+    // intervalRef.current = setInterval(() => {
+    //   setTimer((prev) => {
+    //     if (prev <= 1) {
+    //       clearInterval(intervalRef.current!);
+    //       return 0;
+    //     }
+    //     return prev - 1;
+    //   });
+    // }, 1000);
   };
 
   return (
@@ -58,7 +60,11 @@ function App() {
         <div className="flex flex-col justify-center items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="font-bold text-slate-700">time:</div>
-            <Dropdown options={["15", "30", "45"]} />
+            <Timer
+              options={TIMER_OPTIONS}
+              selected={timer}
+              setSelected={setTimer}
+            />
           </div>
           <div>
             <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />

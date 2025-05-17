@@ -1,4 +1,4 @@
-import { useInput } from "./InputContext";
+import { useInput } from "../InputContext";
 
 interface TileProps {
   num: number;

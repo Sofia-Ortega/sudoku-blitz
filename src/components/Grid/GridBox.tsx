@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useInput } from "./InputContext";
+import { useInput } from "../InputContext";
 
 interface Props {
   num: number | null;
@@ -41,7 +41,7 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
   return (
     <div
       className={`w-32 h-32 flex justify-center items-center  ${
-        num == null ? "text-violet-800 font-bold bg-indigo-200" : "bg-sky-50"
+        num == null ? "text-violet-800 font-bold bg-indigo-100" : "bg-sky-50"
       }`}
     >
       {num === null ? (

@@ -1,4 +1,5 @@
 import { GridBox } from "./GridBox";
+
 interface GridProps {
   gridNums: (number | null)[];
   refreshPuzzle: () => void;
