@@ -4,6 +4,7 @@ import { Grid } from "./components/Grid/Grid";
 import Timer from "./components/Timer/Timer";
 import { Tiles } from "./components/Tiles/Tiles";
 import { InputProvider } from "./components/InputContext";
+import SmoothDisappearance from "./components/Test/SmoothDisapperance";
 
 const randomGrid = (): (number | null)[] => {
   let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
