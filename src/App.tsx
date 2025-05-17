@@ -20,8 +20,6 @@ const randomGrid = (): (number | null)[] => {
 };
 
 function App() {
-  const TIMER_OPTIONS = [15, 30, 45, 60];
-
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(30);
@@ -58,14 +56,7 @@ function App() {
       <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
         <div className="text-xl text-center">Sudoku Blitz</div>
         <div className="flex flex-col justify-center items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="font-bold text-slate-700">time:</div>
-            <Timer
-              options={TIMER_OPTIONS}
-              selected={timer}
-              setSelected={setTimer}
-            />
-          </div>
+          <Timer />
           <div>
             <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
           </div>

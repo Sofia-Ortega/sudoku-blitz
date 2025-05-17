@@ -43,3 +43,7 @@ h1 {
     color: #747bff;
   }
 }
+
+button {
+  cursor: pointer;
+}
