@@ -38,9 +38,9 @@ export default function Timer({}: DropdownProps) {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
-  const [width, setWidth] = useState<number>(12);
+  const [score, setScore] = useState<number>(0);
 
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
 
   const handleTimerClick = () => {
     if (!playing) {
@@ -52,6 +52,14 @@ export default function Timer({}: DropdownProps) {
     setIsOpen(false);
   };
 
+  const removePoint = () => {
+    setScore(score - 1);
+  };
+
+  const addPoint = () => {
+    setScore(score + 1);
+  };
+
   const animBorder = {
     inital: { width: "100%", height: "0.5px" },
     open: {
@@ -60,15 +68,14 @@ export default function Timer({}: DropdownProps) {
       transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
     },
     closed: {
-      width: `${width}px`,
+      width: `${Math.abs(score) * 25 + 12}px`,
       height: "8px",
       transition: {
         type: "spring",
         stiffness: 200,
-        damping: 20,
+        damping: 10,
       },
     },
-    // width: `${width}px`,
   };
 
   return (
@@ -104,7 +111,13 @@ export default function Timer({}: DropdownProps) {
           <motion.div
             variants={animBorder}
             animate={!playing ? "open" : "closed"}
-            className="align-middle bg-slate-600 my-2"
+            className={`align-middle my-2 ${
+              !playing
+                ? "bg-slate-700"
+                : score >= 0
+                ? "bg-blue-700"
+                : "bg-red-700"
+            }`}
           />
 
           {isOpen && (
@@ -115,19 +128,19 @@ export default function Timer({}: DropdownProps) {
           )}
         </motion.div>
       </div>
-      <button onClick={() => setPlaying(!playing)}>
-        click me {playing ? "t" : "f"}
-      </button>
       <div>
+        <button onClick={() => setPlaying(!playing)}>
+          click me {playing ? "t" : "f"}
+        </button>
         <button
           className="bg-sky-700 text-white px-2 rounded-sm mx-2"
-          onClick={() => setWidth(width + 50)}
+          onClick={addPoint}
         >
           ADD WIDTh
         </button>
         <button
           className="bg-sky-700 text-white px-2 rounded-sm mx-2"
-          onClick={() => setWidth(width - 50)}
+          onClick={removePoint}
         >
           REMOVE WIDTh
         </button>
