@@ -3,8 +3,9 @@ import "./App.css";
 import { Grid } from "./components/Grid/Grid";
 import Timer from "./components/Timer/Timer";
 import { Tiles } from "./components/Tiles/Tiles";
-import { InputProvider, useInput } from "./components/InputContext";
-import SmoothDisappearance from "./components/Test/SmoothDisapperance";
+import { useInput } from "./components/InputContext";
+import Header from "./components/Header/Header";
+import GameOver from "./components/GameOver/GameOver";
 
 const randomGrid = (): (number | null)[] => {
   let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -23,21 +24,16 @@ const randomGrid = (): (number | null)[] => {
 function App() {
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
   const [score, setScore] = useState(0);
-  const [timer, setTimer] = useState(30);
   const [playing, setPlaying] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
 
   const { userInput, setUserInput } = useInput();
 
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
   const refreshPuzzle = () => {
-    if (timer == 0) return;
-
     setGridNums(randomGrid());
     setUserInput("");
 
     if (!playing) {
-      startTimer();
       setPlaying(true);
     }
   };
@@ -60,29 +56,25 @@ function App() {
     refreshPuzzle();
   }, [userInput]);
 
-  const startTimer = () => {
-    // setTimer(30);
-    // intervalRef.current = setInterval(() => {
-    //   setTimer((prev) => {
-    //     if (prev <= 1) {
-    //       clearInterval(intervalRef.current!);
-    //       return 0;
-    //     }
-    //     return prev - 1;
-    //   });
-    // }, 1000);
-  };
-
   return (
-    <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
-      <div className="text-xl text-center">Sudoku Blitz</div>
-      <div className="flex flex-col justify-center items-center gap-4">
-        <Timer score={score} playing={playing} />
-        <div>
-          <Grid gridNums={gridNums} />
-        </div>
-      </div>
-      <Tiles />
+    <div className="bg-sky-100 min-h-screen flex flex-col justify-between items-center gap-10">
+      <Header />
+      {gameOver ? (
+        <>
+          <GameOver />
+          <div></div>
+        </>
+      ) : (
+        <>
+          <div className="flex flex-col justify-center items-center gap-4">
+            <Timer score={score} playing={playing} />
+            <div>
+              <Grid gridNums={gridNums} />
+            </div>
+          </div>
+          <Tiles />
+        </>
+      )}
     </div>
   );
 }
