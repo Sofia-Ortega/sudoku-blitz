@@ -77,7 +77,7 @@ function App() {
     <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
       <div className="text-xl text-center">Sudoku Blitz</div>
       <div className="flex flex-col justify-center items-center gap-4">
-        <Timer score={score} />
+        <Timer score={score} playing={playing} />
         <div>
           <Grid gridNums={gridNums} />
         </div>

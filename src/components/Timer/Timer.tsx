@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Arrow from "./ArrowSvg";
 import DropDownOptions from "./DropDownOptions";
 import { motion } from "motion/react";
-import { useInput } from "../InputContext";
 
 const animText = {
   initial: { width: 0, opacity: 0 },
@@ -34,17 +33,15 @@ const animArrow = {
 
 interface DropdownProps {
   score: number;
+  playing: boolean;
 }
 
-export default function Timer({ score }: DropdownProps) {
+export default function Timer({ score, playing }: DropdownProps) {
   const TIMER_OPTIONS = [15, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
-
-  const [playing, setPlaying] = useState(true);
-
-  const { userInput } = useInput();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleTimerClick = () => {
     if (!playing) {
@@ -56,7 +53,22 @@ export default function Timer({ score }: DropdownProps) {
     setIsOpen(false);
   };
 
-  useEffect(() => {}, [userInput]);
+  const startTimer = () => {
+    intervalRef.current = setInterval(() => {
+      setSelected((prev) => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current!);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+  useEffect(() => {
+    if (!playing) return;
+
+    startTimer();
+  }, [playing]);
 
   const animBorder = {
     inital: { width: "100%", height: "0.5px" },

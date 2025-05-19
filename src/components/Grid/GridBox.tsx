@@ -3,9 +3,8 @@ import { useInput } from "../InputContext";
 
 interface Props {
   num: number | null;
-  ans: number;
 }
-export function GridBox({ num, ans }: Props) {
+export function GridBox({ num }: Props) {
   const { userInput, setUserInput } = useInput();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,10 +19,7 @@ export function GridBox({ num, ans }: Props) {
     // Take only the last digit if multiple are typed/pasted
     const digit = input.slice(-1);
 
-    if (/^\d$/.test(digit)) {
-      if (digit === ans.toString()) {
-        setUserInput("");
-      }
+    if (/^\d$/.test(digit) && digit != "0") {
       setUserInput(digit);
     }
   };
