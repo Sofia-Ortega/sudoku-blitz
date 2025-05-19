@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Arrow from "./ArrowSvg";
 import DropDownOptions from "./DropDownOptions";
 import { motion } from "motion/react";
-
-interface DropdownProps {}
+import { useInput } from "../InputContext";
 
 const animText = {
   initial: { width: 0, opacity: 0 },
@@ -33,14 +32,19 @@ const animArrow = {
   },
 };
 
-export default function Timer({}: DropdownProps) {
+interface DropdownProps {
+  score: number;
+}
+
+export default function Timer({ score }: DropdownProps) {
   const TIMER_OPTIONS = [15, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
-  const [score, setScore] = useState<number>(0);
 
   const [playing, setPlaying] = useState(true);
+
+  const { userInput } = useInput();
 
   const handleTimerClick = () => {
     if (!playing) {
@@ -52,13 +56,7 @@ export default function Timer({}: DropdownProps) {
     setIsOpen(false);
   };
 
-  const removePoint = () => {
-    setScore(score - 1);
-  };
-
-  const addPoint = () => {
-    setScore(score + 1);
-  };
+  useEffect(() => {}, [userInput]);
 
   const animBorder = {
     inital: { width: "100%", height: "0.5px" },
@@ -127,23 +125,6 @@ export default function Timer({}: DropdownProps) {
             />
           )}
         </motion.div>
-      </div>
-      <div>
-        <button onClick={() => setPlaying(!playing)}>
-          click me {playing ? "t" : "f"}
-        </button>
-        <button
-          className="bg-sky-700 text-white px-2 rounded-sm mx-2"
-          onClick={addPoint}
-        >
-          ADD WIDTh
-        </button>
-        <button
-          className="bg-sky-700 text-white px-2 rounded-sm mx-2"
-          onClick={removePoint}
-        >
-          REMOVE WIDTh
-        </button>
       </div>
     </div>
   );

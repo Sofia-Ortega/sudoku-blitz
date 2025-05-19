@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Grid } from "./components/Grid/Grid";
 import Timer from "./components/Timer/Timer";
 import { Tiles } from "./components/Tiles/Tiles";
-import { InputProvider } from "./components/InputContext";
+import { InputProvider, useInput } from "./components/InputContext";
 import SmoothDisappearance from "./components/Test/SmoothDisapperance";
 
 const randomGrid = (): (number | null)[] => {
@@ -24,20 +24,41 @@ function App() {
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(30);
-  const [running, setRunning] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  const { userInput, setUserInput } = useInput();
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const refreshPuzzle = () => {
     if (timer == 0) return;
 
     setGridNums(randomGrid());
-    setScore(score + 1);
+    setUserInput("");
 
-    if (!running) {
+    if (!playing) {
       startTimer();
-      setRunning(true);
+      setPlaying(true);
     }
   };
+
+  useEffect(() => {
+    if (userInput == "") return;
+
+    let numUserInput = Number(userInput);
+
+    const TOTAL_GRID_SUM = 45;
+
+    const my_sum = gridNums.reduce((acc: number, val) => acc + (val ?? 0), 0);
+
+    if (TOTAL_GRID_SUM - my_sum == numUserInput) {
+      setScore(score + 1);
+    } else {
+      setScore(score - 1);
+    }
+
+    refreshPuzzle();
+  }, [userInput]);
 
   const startTimer = () => {
     // setTimer(30);
@@ -53,18 +74,16 @@ function App() {
   };
 
   return (
-    <InputProvider>
-      <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
-        <div className="text-xl text-center">Sudoku Blitz</div>
-        <div className="flex flex-col justify-center items-center gap-4">
-          <Timer />
-          <div>
-            <Grid gridNums={gridNums} refreshPuzzle={refreshPuzzle} />
-          </div>
+    <div className="bg-sky-100 min-h-screen flex flex-col justify-around items-center gap-10">
+      <div className="text-xl text-center">Sudoku Blitz</div>
+      <div className="flex flex-col justify-center items-center gap-4">
+        <Timer score={score} />
+        <div>
+          <Grid gridNums={gridNums} />
         </div>
-        <Tiles />
       </div>
-    </InputProvider>
+      <Tiles />
+    </div>
   );
 }
 

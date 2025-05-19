@@ -3,10 +3,9 @@ import { useInput } from "../InputContext";
 
 interface Props {
   num: number | null;
-  refreshPuzzle: () => void;
   ans: number;
 }
-export function GridBox({ num, refreshPuzzle, ans }: Props) {
+export function GridBox({ num, ans }: Props) {
   const { userInput, setUserInput } = useInput();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,8 +22,6 @@ export function GridBox({ num, refreshPuzzle, ans }: Props) {
 
     if (/^\d$/.test(digit)) {
       if (digit === ans.toString()) {
-        console.log("correct");
-        refreshPuzzle();
         setUserInput("");
       }
       setUserInput(digit);
