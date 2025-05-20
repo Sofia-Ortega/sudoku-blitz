@@ -26,24 +26,26 @@ export default function GameOver({
       className="text-slate-700"
     >
       <div className="text-center text-3xl font-bold my-2">Good Game!</div>
-      <div className="bg-sky-50 w-[396px] h-[369px] rounded-2xl shadow-sm ">
+      <div className="bg-sky-50 w-[296px] h-[296px] sm:w-[396px] sm:h-[369px] rounded-2xl shadow-sm ">
         <div className="flex flex-col justify-between h-full py-4">
-          <div className="flex items-center justify-center  text-xl">
-            <span className="mr-1">Time:</span>
-            <span className="font-bold text-3xl">{timerSelection}</span>
+          <div className="flex items-center justify-center text-lg sm:text-xl">
+            <span className="mr-1">time:</span>
+            <span className="font-bold text-2xl sm:text-3xl">
+              {timerSelection}
+            </span>
           </div>
           <div>
             <div className="grid grid-cols-2 grid-rows-2 gap-4">
-              <div className="text-2xl font-bold text-right self-center ">
+              <div className="text-lg sm:text-2xl font-bold text-right self-center ">
                 Accuracy:
               </div>
-              <div className="self-center text-blue-800 font-bold text-5xl">
+              <div className="self-center text-blue-800 font-bold text-4xl sm:text-5xl">
                 {accuracy.toFixed(0)}%
               </div>
-              <div className="text-2xl font-bold text-right self-center ">
+              <div className="text-lg sm:text-2xl font-bold text-right self-center ">
                 Score:
               </div>
-              <div className="self-center text-blue-800 font-bold text-5xl">
+              <div className="self-center text-blue-800 font-bold  text-4xl sm:text-5xl">
                 {score}
               </div>
             </div>

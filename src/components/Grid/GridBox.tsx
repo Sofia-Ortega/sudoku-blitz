@@ -33,7 +33,7 @@ export function GridBox({ num }: Props) {
 
   return (
     <div
-      className={`w-32 h-32 flex justify-center items-center  ${
+      className={`w-24 h-24 sm:w-32 sm:h-32 flex justify-center items-center  ${
         num == null ? "text-violet-800 font-bold bg-indigo-100" : "bg-sky-50"
       }`}
     >
@@ -43,10 +43,10 @@ export function GridBox({ num }: Props) {
           type="text"
           value={userInput}
           onChange={handleChange}
-          className={`w-full h-full text-center text-4xl outline-none border-none  `}
+          className={`w-full h-full text-center text-4xl outline-none border-none `}
         />
       ) : (
-        <div className="text-4xl">{num}</div>
+        <div className="text-4xl text-slate-700">{num}</div>
       )}
     </div>
   );

@@ -43,12 +43,14 @@ export default function Timer({
   playing,
   timerFinished,
 }: DropdownProps) {
-  const { setTimerSelection } = useInput();
+  const { timerSelection, setTimerSelection } = useInput();
 
   const TIMER_OPTIONS = [15, 1, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
+  const [selected, setSelected] = useState<number>(
+    timerSelection || TIMER_OPTIONS[1]
+  );
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleTimerClick = () => {
@@ -132,7 +134,7 @@ export default function Timer({
           <motion.div
             variants={animBorder}
             animate={!playing ? "open" : "closed"}
-            className={`align-middle my-2 ${
+            className={`align-middle my-2 max-w-screen overflow-hidden ${
               !playing
                 ? "bg-slate-700"
                 : score >= 0
