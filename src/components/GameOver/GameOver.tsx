@@ -1,12 +1,35 @@
-export default function GameOver() {
+import { motion } from "framer-motion";
+
+interface GameOverProps {
+  score: number;
+  accuracy: number;
+  totalTime: number;
+  resetGame: () => void;
+}
+
+export default function GameOver({
+  score,
+  accuracy,
+  totalTime,
+  resetGame,
+}: GameOverProps) {
   return (
-    <div className="text-slate-700">
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 10,
+      }}
+      className="text-slate-700"
+    >
       <div className="text-center text-3xl font-bold my-2">Good Game!</div>
       <div className="bg-sky-50 w-[396px] h-[369px] rounded-2xl shadow-sm ">
         <div className="flex flex-col justify-between h-full py-4">
           <div className="flex items-center justify-center  text-xl">
             <span className="mr-1">Time:</span>
-            <span className="font-bold text-3xl">30</span>
+            <span className="font-bold text-3xl">{totalTime}</span>
           </div>
           <div>
             <div className="grid grid-cols-2 grid-rows-2 gap-4">
@@ -14,13 +37,13 @@ export default function GameOver() {
                 Accuracy:
               </div>
               <div className="self-center text-blue-800 font-bold text-5xl">
-                95%
+                {accuracy.toFixed(0)}%
               </div>
               <div className="text-2xl font-bold text-right self-center ">
                 Score:
               </div>
               <div className="self-center text-blue-800 font-bold text-5xl">
-                12
+                {score}
               </div>
             </div>
           </div>
@@ -35,6 +58,6 @@ export default function GameOver() {
         </div>
       </div>
       <div></div>
-    </div>
+    </motion.div>
   );
 }
