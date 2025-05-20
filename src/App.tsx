@@ -23,9 +23,14 @@ const randomGrid = (): (number | null)[] => {
 
 function App() {
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
+
   const [score, setScore] = useState(0);
+  const correctCount = useRef<number>(0);
+  const attemptCount = useRef<number>(0);
+  const [accuracy, setAccuracy] = useState(0.0);
+
   const [playing, setPlaying] = useState(false);
-  const [gameOver, setGameOver] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
 
   const { userInput, setUserInput } = useInput();
 
@@ -38,6 +43,19 @@ function App() {
     }
   };
 
+  const timerFinished = () => {
+    setPlaying(false);
+    setGameOver(true);
+  };
+
+  const resetGame = () => {
+    setGridNums(randomGrid());
+    setUserInput("");
+
+    setPlaying(false);
+    setGameOver(false);
+  };
+
   useEffect(() => {
     if (userInput == "") return;
 
@@ -46,12 +64,18 @@ function App() {
     const TOTAL_GRID_SUM = 45;
 
     const my_sum = gridNums.reduce((acc: number, val) => acc + (val ?? 0), 0);
+    attemptCount.current += 1;
 
     if (TOTAL_GRID_SUM - my_sum == numUserInput) {
+      correctCount.current += 1;
       setScore(score + 1);
     } else {
       setScore(score - 1);
     }
+
+    const newAccuracy =
+      ((correctCount.current * 1.0) / attemptCount.current) * 100;
+    setAccuracy(newAccuracy);
 
     refreshPuzzle();
   }, [userInput]);
@@ -61,13 +85,17 @@ function App() {
       <Header />
       {gameOver ? (
         <>
-          <GameOver />
+          <GameOver score={score} accuracy={accuracy} resetGame={resetGame} />
           <div></div>
         </>
       ) : (
         <>
           <div className="flex flex-col justify-center items-center gap-4">
-            <Timer score={score} playing={playing} />
+            <Timer
+              score={score}
+              playing={playing}
+              timerFinished={timerFinished}
+            />
             <div>
               <Grid gridNums={gridNums} />
             </div>

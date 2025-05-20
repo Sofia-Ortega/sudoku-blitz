@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Arrow from "./ArrowSvg";
 import DropDownOptions from "./DropDownOptions";
 import { motion } from "motion/react";
+import { useInput } from "../InputContext";
 
 const animText = {
   initial: { width: 0, opacity: 0 },
@@ -34,10 +35,17 @@ const animArrow = {
 interface DropdownProps {
   score: number;
   playing: boolean;
+  timerFinished: () => void;
 }
 
-export default function Timer({ score, playing }: DropdownProps) {
-  const TIMER_OPTIONS = [15, 30, 45, 60];
+export default function Timer({
+  score,
+  playing,
+  timerFinished,
+}: DropdownProps) {
+  const { setTimerSelection } = useInput();
+
+  const TIMER_OPTIONS = [15, 1, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(TIMER_OPTIONS[1]);
@@ -54,10 +62,13 @@ export default function Timer({ score, playing }: DropdownProps) {
   };
 
   const startTimer = () => {
+    setTimerSelection(selected);
+
     intervalRef.current = setInterval(() => {
       setSelected((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current!);
+          timerFinished();
           return 0;
         }
         return prev - 1;
