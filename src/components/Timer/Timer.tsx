@@ -84,6 +84,10 @@ export default function Timer({
     startTimer();
   }, [playing]);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [dailyChallenge]);
+
   const animBorder = {
     inital: { width: "100%", height: "0.5px" },
     open: {

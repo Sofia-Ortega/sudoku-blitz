@@ -7,7 +7,7 @@ interface Props {
 export default function Header({ dailyChallenge, setDailyChallenge }: Props) {
   return (
     <div className="flex justify-center items-center">
-      <h1 className="text-center text-slate-700">Sudoku Blitz: </h1>
+      <h1 className=" text-center text-slate-700">Sudoku Blitz: </h1>
       <div
         className={`group flex items-center gap-2 ${
           dailyChallenge ? "text-purple-800" : "text-blue-800"
