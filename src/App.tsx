@@ -119,6 +119,10 @@ function App() {
     refreshPuzzle();
   }, [userInput]);
 
+  useEffect(() => {
+    resetGame();
+  }, [dailyChallenge]);
+
   return (
     <div className="bg-sky-100 h-dvh w-screen flex flex-col justify-around items-center gap-10">
       <Header
@@ -127,7 +131,12 @@ function App() {
       />
       {gameOver ? (
         <>
-          <GameOver score={score} accuracy={accuracy} resetGame={resetGame} />
+          <GameOver
+            dailyChallenge={dailyChallenge}
+            score={score}
+            accuracy={accuracy}
+            resetGame={resetGame}
+          />
           <div></div>
         </>
       ) : (
