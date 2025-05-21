@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, useAnimation } from "framer-motion";
 import "./App.css";
 import { Grid } from "./components/Grid/Grid";
 import Timer from "./components/Timer/Timer";
@@ -21,6 +22,13 @@ const randomGrid = (): (number | null)[] => {
   return shuffled;
 };
 
+const shakeVariants = {
+  shake: {
+    x: [0, -5, 5, -5, 5, 0],
+    transition: { duration: 0.4 },
+  },
+};
+
 function App() {
   const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
 
@@ -31,6 +39,8 @@ function App() {
 
   const [playing, setPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  const controls = useAnimation();
 
   const { userInput, setUserInput } = useInput();
 
@@ -72,6 +82,10 @@ function App() {
       setScore(score + 1);
     } else {
       setScore(score - 1);
+      controls.start({
+        x: [0, -4, 4, -4, 4, 0],
+        transition: { duration: 0.3 },
+      });
     }
 
     const newAccuracy =
@@ -97,9 +111,9 @@ function App() {
               playing={playing}
               timerFinished={timerFinished}
             />
-            <div>
+            <motion.div animate={controls}>
               <Grid gridNums={gridNums} />
-            </div>
+            </motion.div>
           </div>
           <Tiles />
         </>
