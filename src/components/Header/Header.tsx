@@ -1,3 +1,3 @@
 export default function Header() {
-  return <div className="text-xl text-center">Sudoku Blitz</div>;
+  return <h1 className="text-center">Sudoku Blitz</h1>;
 }

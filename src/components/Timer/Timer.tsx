@@ -45,7 +45,7 @@ export default function Timer({
 }: DropdownProps) {
   const { timerSelection, setTimerSelection } = useInput();
 
-  const TIMER_OPTIONS = [15, 1, 30, 45, 60];
+  const TIMER_OPTIONS = [15, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>(

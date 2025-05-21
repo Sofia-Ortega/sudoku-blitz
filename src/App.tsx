@@ -82,7 +82,7 @@ function App() {
   }, [userInput]);
 
   return (
-    <div className="bg-sky-100 min-h-screen w-screen flex flex-col justify-between items-center gap-10">
+    <div className="bg-sky-100  min-h-screen w-screen flex flex-col justify-around items-center gap-10">
       <Header />
       {gameOver ? (
         <>
