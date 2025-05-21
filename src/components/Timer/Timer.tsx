@@ -35,12 +35,14 @@ const animArrow = {
 interface DropdownProps {
   score: number;
   playing: boolean;
+  dailyChallenge: boolean;
   timerFinished: () => void;
 }
 
 export default function Timer({
   score,
   playing,
+  dailyChallenge,
   timerFinished,
 }: DropdownProps) {
   const { timerSelection, setTimerSelection } = useInput();
@@ -48,16 +50,15 @@ export default function Timer({
   const TIMER_OPTIONS = [15, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<number>(
-    timerSelection || TIMER_OPTIONS[1]
-  );
+  const [selected, setSelected] = useState<number>(timerSelection || 60);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleTimerClick = () => {
-    if (!playing) {
+    if (!playing && !dailyChallenge) {
       setIsOpen((prev) => !prev);
     }
   };
+
   const handleSelect = (option: number) => {
     setSelected(option);
     setIsOpen(false);
@@ -119,14 +120,15 @@ export default function Timer({
         >
           <div
             className={`flex justify-between items-center font-bold text-blue-800 text-5xl select-none ${
-              !playing ? "cursor-pointer" : ""
+              !playing && !dailyChallenge ? "cursor-pointer" : ""
             }`}
             onClick={handleTimerClick}
           >
             <span className="mx-2 ">{selected}</span>
             <motion.div
               variants={animArrow}
-              animate={!playing ? "open" : "closed"}
+              animate={!playing && !dailyChallenge ? "open" : "closed"}
+              initial={"closed"}
             >
               <Arrow isOpen={isOpen} />
             </motion.div>

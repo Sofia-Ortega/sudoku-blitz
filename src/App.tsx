@@ -8,30 +8,28 @@ import { useInput } from "./components/InputContext";
 import Header from "./components/Header/Header";
 import GameOver from "./components/GameOver/GameOver";
 
-const randomGrid = (): (number | null)[] => {
-  let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  const missingIndex = Math.floor(Math.random() * digits.length);
-  digits[missingIndex] = null;
-
-  let shuffled = digits
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-
-  return shuffled;
+const mulberry32 = (seed: number) => {
+  return function () {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
 };
 
-const shakeVariants = {
-  shake: {
-    x: [0, -5, 5, -5, 5, 0],
-    transition: { duration: 0.4 },
-  },
+const getDailySeed = (): number => {
+  const today = new Date().toISOString().slice(0, 10); // e.g. "2025-05-20"
+  let hash = 0;
+  for (let i = 0; i < today.length; i++) {
+    hash = today.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  console.log(hash);
+  return hash;
 };
 
 function App() {
-  const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
-
   const [score, setScore] = useState(0);
   const correctCount = useRef<number>(0);
   const attemptCount = useRef<number>(0);
@@ -39,6 +37,32 @@ function App() {
 
   const [playing, setPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [dailyChallenge, setDailyChallenge] = useState(true);
+
+  const randomGrid = (): (number | null)[] => {
+    let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    let rng: () => number;
+
+    if (dailyChallenge) {
+      const seed = getDailySeed() + attemptCount.current;
+      rng = mulberry32(seed);
+    } else {
+      rng = Math.random;
+    }
+
+    const missingIndex = Math.floor(rng() * digits.length);
+    digits[missingIndex] = null;
+
+    let shuffled = digits
+      .map((value) => ({ value, sort: rng() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+
+    return shuffled;
+  };
+
+  const [gridNums, setGridNums] = useState<(number | null)[]>(randomGrid());
 
   const controls = useAnimation();
 
@@ -97,7 +121,10 @@ function App() {
 
   return (
     <div className="bg-sky-100 h-dvh w-screen flex flex-col justify-around items-center gap-10">
-      <Header />
+      <Header
+        dailyChallenge={dailyChallenge}
+        setDailyChallenge={setDailyChallenge}
+      />
       {gameOver ? (
         <>
           <GameOver score={score} accuracy={accuracy} resetGame={resetGame} />
@@ -109,6 +136,7 @@ function App() {
             <Timer
               score={score}
               playing={playing}
+              dailyChallenge={dailyChallenge}
               timerFinished={timerFinished}
             />
             <motion.div animate={controls}>
