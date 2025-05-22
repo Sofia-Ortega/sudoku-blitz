@@ -40,7 +40,7 @@ export function GridBox({ num }: Props) {
       {num === null ? (
         <input
           ref={inputRef}
-          type="text"
+          type="tel"
           value={userInput}
           onChange={handleChange}
           className={`w-full h-full text-center text-4xl outline-none border-none `}

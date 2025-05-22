@@ -45,12 +45,16 @@ export default function Timer({
   dailyChallenge,
   timerFinished,
 }: DropdownProps) {
+  const DEFAULT_TIMER_TIME = 30;
+
   const { timerSelection, setTimerSelection } = useInput();
 
   const TIMER_OPTIONS = [15, 30, 45, 60];
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<number>(timerSelection || 60);
+  const [timer, setTimer] = useState<number>(
+    timerSelection || DEFAULT_TIMER_TIME
+  );
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleTimerClick = () => {
@@ -60,15 +64,15 @@ export default function Timer({
   };
 
   const handleSelect = (option: number) => {
-    setSelected(option);
+    setTimer(option);
     setIsOpen(false);
   };
 
   const startTimer = () => {
-    setTimerSelection(selected);
+    setTimerSelection(timer);
 
     intervalRef.current = setInterval(() => {
-      setSelected((prev) => {
+      setTimer((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current!);
           timerFinished();
@@ -86,6 +90,10 @@ export default function Timer({
 
   useEffect(() => {
     setIsOpen(false);
+    if (timer) {
+      clearInterval(intervalRef.current!);
+      setTimer(DEFAULT_TIMER_TIME);
+    }
   }, [dailyChallenge]);
 
   const animBorder = {
@@ -128,7 +136,7 @@ export default function Timer({
             }`}
             onClick={handleTimerClick}
           >
-            <span className="mx-2 ">{selected}</span>
+            <span className="mx-2 ">{timer}</span>
             <motion.div
               variants={animArrow}
               animate={!playing && !dailyChallenge ? "open" : "closed"}
