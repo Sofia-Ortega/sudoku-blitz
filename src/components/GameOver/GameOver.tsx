@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion, spring } from "framer-motion";
 import { useInput } from "../InputContext";
+import CheckmarkIcon from "../../assets/CheckmarkIcon";
 
 interface GameOverProps {
   score: number;
@@ -126,18 +127,48 @@ export default function GameOver({
     return emojis[Math.floor(Math.random() * emojis.length)];
   };
 
-  const handleCopy = async () => {
-    const emoji = randomEmoji();
+  const handleCopyMobile = async (shareText: string): Promise<boolean> => {
+    if (!navigator?.share) return false;
 
     try {
-      await navigator.clipboard.writeText(
-        `${emoji} Sudoku Blitz ${emoji}\n\nScore: ${score}\nAccuracy: ${accuracy}\n\nhttps://sofia-ortega.github.io/sudoku-blitz/`
-      );
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // hide after 2s
+      await navigator.share({
+        title: "Sudoku Blitz",
+        text: shareText,
+        url: "https://sofia-ortega/github.io/sudoku-blitz/",
+      });
+
+      return true;
     } catch (err) {
-      console.error("Failed to copy!", err);
+      return false;
     }
+  };
+
+  const copyToClipBoard = async (shareText: string) => {
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      alert("and another err" + err);
+      console.error("Copy failed:", err);
+    }
+  };
+
+  const handleCopy = async () => {
+    const emoji = randomEmoji();
+    const shareText = `${emoji} Sudoku Blitz ${emoji}\n\nScore: ${score}\nAccuracy: ${accuracy}\n\nhttps://sofia-ortega.github.io/sudoku-blitz/`;
+
+    const isMobile =
+      typeof navigator !== "undefined" &&
+      navigator.userAgent &&
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      const success = await handleCopyMobile(shareText);
+      if (success) return;
+    }
+
+    copyToClipBoard(shareText);
   };
 
   return (
@@ -200,63 +231,14 @@ export default function GameOver({
       <AnimatePresence>
         {copied && (
           <motion.div
-            initial={{ x: -100, opacity: 0 }}
+            initial={{ x: -10, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -100, opacity: 0 }}
+            exit={{ x: -10, opacity: 0 }}
             transition={{ type: "spring" }}
-            className="absolute flex justify-center w-full bottom-24 text-white font-bold text-sm animate-fadeIn"
+            className="absolute flex justify-center w-full bottom-24 text-white font-bold text-sm"
           >
             <div className="w-fit flex gap-2 bg-green-700 py-2 px-12 shadow-md rounded text-white">
-              <svg
-                width="20px"
-                height="20px"
-                viewBox="0 0 32 32"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-                fill="#ffffff"
-                stroke="#ffffff"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke="#CCCCCC"
-                  stroke-width="0.064"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  {" "}
-                  <title>checkmark-circle</title>{" "}
-                  <desc>Created with Sketch Beta.</desc> <defs> </defs>{" "}
-                  <g
-                    id="Page-1"
-                    stroke="none"
-                    stroke-width="1"
-                    fill="none"
-                    fill-rule="evenodd"
-                    sketch:type="MSPage"
-                  >
-                    {" "}
-                    <g
-                      id="Icon-Set"
-                      sketch:type="MSLayerGroup"
-                      transform="translate(-100.000000, -1139.000000)"
-                      fill="#ffffff"
-                    >
-                      {" "}
-                      <path
-                        d="M122.027,1148.07 C121.548,1147.79 120.937,1147.96 120.661,1148.43 L114.266,1159.51 L110.688,1156.21 C110.31,1155.81 109.677,1155.79 109.274,1156.17 C108.871,1156.54 108.85,1157.18 109.228,1157.58 L113.8,1161.8 C114.177,1162.2 114.81,1162.22 115.213,1161.84 C115.335,1161.73 122.393,1149.43 122.393,1149.43 C122.669,1148.96 122.505,1148.34 122.027,1148.07 L122.027,1148.07 Z M116,1169 C108.268,1169 102,1162.73 102,1155 C102,1147.27 108.268,1141 116,1141 C123.732,1141 130,1147.27 130,1155 C130,1162.73 123.732,1169 116,1169 L116,1169 Z M116,1139 C107.164,1139 100,1146.16 100,1155 C100,1163.84 107.164,1171 116,1171 C124.836,1171 132,1163.84 132,1155 C132,1146.16 124.836,1139 116,1139 L116,1139 Z"
-                        id="checkmark-circle"
-                        sketch:type="MSShapeGroup"
-                      >
-                        {" "}
-                      </path>{" "}
-                    </g>{" "}
-                  </g>{" "}
-                </g>
-              </svg>
+              <CheckmarkIcon />
               <div>Copied to clipboard!</div>
             </div>
           </motion.div>
