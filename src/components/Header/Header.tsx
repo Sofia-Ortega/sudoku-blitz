@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function Header({ dailyChallenge }: Props) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   return (
     <header className="w-full px-4 py-2">
