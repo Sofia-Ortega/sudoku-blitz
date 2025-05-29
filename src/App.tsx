@@ -25,7 +25,6 @@ const getDailySeed = (): number => {
     hash = today.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  console.log(hash);
   return hash;
 };
 

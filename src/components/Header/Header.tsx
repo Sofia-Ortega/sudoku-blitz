@@ -1,46 +1,24 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import HamburgerIcon from "../../assets/HamburgerIcon";
+import HamburgerButton from "./HamburgerButton";
+import HeaderBadge from "./HeaderBadge";
 interface Props {
   dailyChallenge: boolean;
   setDailyChallenge: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function Header({ dailyChallenge, setDailyChallenge }: Props) {
+export default function Header({ dailyChallenge }: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <div className="flex justify-center items-center">
-      <h1 className=" text-center text-slate-700">Sudoku Blitz: </h1>
-      <div
-        className={`group flex items-center gap-2 ${
-          dailyChallenge ? "text-purple-800" : "text-blue-800"
-        }   p-2 border-b-2 cursor-pointer`}
-        onClick={() => setDailyChallenge(!dailyChallenge)}
-      >
-        <h1>{dailyChallenge ? "Daily Challenge" : "Practice"}</h1>
-        <svg
-          className="transition-transform duration-300 group-hover:rotate-[30deg]"
-          fill={dailyChallenge ? "#6e11b0" : "#193cb8"}
-          height="20px"
-          width="20px"
-          version="1.1"
-          id="Capa_1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 489.645 489.645"
-          stroke={dailyChallenge ? "#6e11b0" : "#193cb8"}
-        >
-          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-          <g
-            id="SVGRepo_tracerCarrier"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></g>
-          <g id="SVGRepo_iconCarrier">
-            {" "}
-            <g>
-              {" "}
-              <path d="M460.656,132.911c-58.7-122.1-212.2-166.5-331.8-104.1c-9.4,5.2-13.5,16.6-8.3,27c5.2,9.4,16.6,13.5,27,8.3 c99.9-52,227.4-14.9,276.7,86.3c65.4,134.3-19,236.7-87.4,274.6c-93.1,51.7-211.2,17.4-267.6-70.7l69.3,14.5 c10.4,2.1,21.8-4.2,23.9-15.6c2.1-10.4-4.2-21.8-15.6-23.9l-122.8-25c-20.6-2-25,16.6-23.9,22.9l15.6,123.8 c1,10.4,9.4,17.7,19.8,17.7c12.8,0,20.8-12.5,19.8-23.9l-6-50.5c57.4,70.8,170.3,131.2,307.4,68.2 C414.856,432.511,548.256,314.811,460.656,132.911z"></path>{" "}
-            </g>{" "}
-          </g>
-        </svg>
+    <header className="w-full px-4 py-2">
+      <div className="w-full flex justify-between items-center">
+        <HamburgerButton onClick={() => setIsModalOpen(true)} />
+        <h1 className="font-bold text-slate-600">
+          {dailyChallenge ? "Daily Challenge" : "Practice"}
+        </h1>
+        <HeaderBadge />
       </div>
-    </div>
+    </header>
   );
 }
