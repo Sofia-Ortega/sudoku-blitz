@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import HamburgerIcon from "../../assets/HamburgerIcon";
 import HamburgerButton from "./HamburgerButton";
 import HeaderBadge from "./HeaderBadge";
+import SideMenu from "./SideMenu";
+import { AnimatePresence, motion } from "motion/react";
 interface Props {
   dailyChallenge: boolean;
   setDailyChallenge: Dispatch<SetStateAction<boolean>>;
@@ -19,6 +20,21 @@ export default function Header({ dailyChallenge }: Props) {
         </h1>
         <HeaderBadge />
       </div>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black opacity-50 z-40"
+              onClick={() => setIsModalOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0, transition: { delay: 0.4, duration: 0.3 } }}
+            />
+            <SideMenu onClose={() => setIsModalOpen(false)} />
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
