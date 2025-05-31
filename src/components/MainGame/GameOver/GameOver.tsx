@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion, spring } from "framer-motion";
 import { useInput } from "../InputContext";
-import CheckmarkIcon from "../../assets/CheckmarkIcon";
+import CheckmarkIcon from "../../../assets/CheckmarkIcon";
 
 interface GameOverProps {
   score: number;

@@ -5,7 +5,6 @@ import SideMenu from "./SideMenu";
 import { AnimatePresence, motion } from "motion/react";
 interface Props {
   dailyChallenge: boolean;
-  setDailyChallenge: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Header({ dailyChallenge }: Props) {

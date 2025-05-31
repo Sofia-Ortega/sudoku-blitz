@@ -23,7 +23,7 @@ const tileVariants = {
   },
 };
 
-export function Tiles() {
+export default function Tiles() {
   return (
     <motion.div
       className="flex justify-center items-center m-4 w-full"

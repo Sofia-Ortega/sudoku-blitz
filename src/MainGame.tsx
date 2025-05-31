@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import "./App.css";
-import { Grid } from "./components/Grid/Grid";
-import Timer from "./components/Timer/Timer";
-import { Tiles } from "./components/Tiles/Tiles";
-import { useInput } from "./components/InputContext";
+import Grid from "./components/MainGame/Grid/Grid";
+import Timer from "./components/MainGame/Timer/Timer";
+import Tiles from "./components/MainGame/Tiles/Tiles";
+import { useInput } from "./components/MainGame/InputContext";
 import Header from "./components/Header/Header";
-import GameOver from "./components/GameOver/GameOver";
+import GameOver from "./components/MainGame/GameOver/GameOver";
 
 const mulberry32 = (seed: number) => {
   return function () {
@@ -28,7 +27,11 @@ const getDailySeed = (): number => {
   return hash;
 };
 
-function App() {
+interface Props {
+  dailyChallenge: boolean;
+}
+
+function MainGame({ dailyChallenge }: Props) {
   const [score, setScore] = useState(0);
   const correctCount = useRef<number>(0);
   const attemptCount = useRef<number>(0);
@@ -36,7 +39,6 @@ function App() {
 
   const [playing, setPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [dailyChallenge, setDailyChallenge] = useState(true);
 
   const randomGrid = (): (number | null)[] => {
     let digits: (number | null)[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -124,10 +126,7 @@ function App() {
 
   return (
     <div className="bg-sky-100 h-dvh w-screen flex flex-col justify-around items-center gap-10">
-      <Header
-        dailyChallenge={dailyChallenge}
-        setDailyChallenge={setDailyChallenge}
-      />
+      <Header dailyChallenge={dailyChallenge} />
       {gameOver ? (
         <>
           <GameOver
@@ -158,4 +157,4 @@ function App() {
   );
 }
 
-export default App;
+export default MainGame;
