@@ -1,3 +1,5 @@
+import MainBattleRoyale from "../components/BattleRoyale/MainBattleRoyale";
+
 export default function BattleRoyale() {
-  return <div>Battle Royal</div>;
+  return <MainBattleRoyale />;
 }
