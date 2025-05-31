@@ -1,14 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import MainGame from "./MainGame";
-import { InputProvider } from "./components/MainGame/InputContext";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Header from "./components/Header/Header";
 import DailyChallenge from "./routes/DailyChallenge";
 import Practice from "./routes/Practice";
-import BattleRoyal from "./routes/BattleRoyal";
+import BattleRoyale from "./routes/BattleRoyale";
 import Setting from "./routes/Setting";
+import Layout from "./Layout";
 
 const rootElement = document.getElementById("root");
 
@@ -17,10 +15,12 @@ if (rootElement) {
     <StrictMode>
       <BrowserRouter basename="/sudoku-blitz">
         <Routes>
-          <Route path="/" element={<DailyChallenge />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/battle-royal" element={<BattleRoyal />} />
-          <Route path="/settings" element={<Setting />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<DailyChallenge />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/battle-royale" element={<BattleRoyale />} />
+            <Route path="/settings" element={<Setting />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </StrictMode>

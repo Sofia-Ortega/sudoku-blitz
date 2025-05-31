@@ -3,20 +3,27 @@ import HamburgerButton from "./HamburgerButton";
 import HeaderBadge from "./HeaderBadge";
 import SideMenu from "./SideMenu";
 import { AnimatePresence, motion } from "motion/react";
-interface Props {
-  dailyChallenge: boolean;
-}
+import { useLocation } from "react-router";
 
-export default function Header({ dailyChallenge }: Props) {
-  const [isModalOpen, setIsModalOpen] = useState(true);
+export default function Header() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const location = useLocation();
+
+  const getTitle = () => {
+    if (location.pathname == "/") return "Daily Challenge";
+
+    return location.pathname
+      .replace(/^\//, "") // Remove leading slash
+      .replace(/-/g, " ") // Replace dashes with spaces
+      .replace(/\b\w/g, (c) => c.toUpperCase()); // Capitalize each word
+  };
 
   return (
     <header className="w-full px-4 py-2">
       <div className="w-full flex justify-between items-center">
         <HamburgerButton onClick={() => setIsModalOpen(true)} />
-        <h1 className="font-bold text-slate-600">
-          {dailyChallenge ? "Daily Challenge" : "Practice"}
-        </h1>
+        <h1 className="font-bold text-slate-600">{getTitle()}</h1>
         <HeaderBadge />
       </div>
 

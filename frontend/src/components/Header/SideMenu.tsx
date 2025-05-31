@@ -38,20 +38,41 @@ export default function SideMenu({ onClose }: { onClose: () => void }) {
       <Divider />
 
       <nav className="flex flex-col gap-3">
-        <MyNavLink icon={<SunIcon />} label="Daily Challenge" href="/" />
-        <MyNavLink icon={<TargetIcon />} label="Practice" href="/practice" />
+        <MyNavLink
+          icon={<SunIcon />}
+          label="Daily Challenge"
+          href="/"
+          onClick={onClose}
+        />
+        <MyNavLink
+          icon={<TargetIcon />}
+          label="Practice"
+          href="/practice"
+          onClick={onClose}
+        />
         <MyNavLink
           icon={<SwordsIcon />}
           label="Battle Royal"
-          href="/battle-royal"
+          href="/battle-royale"
+          onClick={onClose}
         />
       </nav>
 
       <Divider />
 
       <nav className="flex flex-col gap-4">
-        <MyNavLink icon={<StatsIcon />} label="Stats" href="/stats" />
-        <MyNavLink icon={<SettingsIcon />} label="Settings" href="/settings" />
+        {/* <MyNavLink
+          icon={<StatsIcon />}
+          label="Stats"
+          href="/stats"
+          onClick={onClose}
+        /> */}
+        <MyNavLink
+          icon={<SettingsIcon />}
+          label="Settings"
+          href="/settings"
+          onClick={onClose}
+        />
       </nav>
     </motion.div>
   );

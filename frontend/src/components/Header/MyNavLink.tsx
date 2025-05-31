@@ -4,16 +4,23 @@ interface NavLinkProps {
   icon: React.ReactNode;
   label: string;
   href: string;
+  onClick?: () => void;
 }
 
-export default function MyNavLink({ icon, label, href }: NavLinkProps) {
+export default function MyNavLink({
+  icon,
+  label,
+  href,
+  onClick,
+}: NavLinkProps) {
   const basicLinkStyle =
-    "hover:bg-blue-50 px-2 py-2 rounded-sm transition-colors duration-200";
-  const activeLinkStyle = basicLinkStyle + " " + " bg-blue-100 text-white";
+    " px-2 py-2 rounded-sm transition-colors duration-200 border-1 border-none hover:shadow-md hover:border-slate-700";
+  const activeLinkStyle = basicLinkStyle + " " + " bg-blue-50";
 
   return (
     <NavLink
       to={href}
+      onClick={onClick}
       className={({ isActive }) =>
         isActive ? activeLinkStyle : basicLinkStyle
       }

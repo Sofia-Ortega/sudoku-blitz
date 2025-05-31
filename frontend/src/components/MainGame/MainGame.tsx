@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import Grid from "./components/MainGame/Grid/Grid";
-import Timer from "./components/MainGame/Timer/Timer";
-import Tiles from "./components/MainGame/Tiles/Tiles";
-import { useInput } from "./components/MainGame/InputContext";
-import Header from "./components/Header/Header";
-import GameOver from "./components/MainGame/GameOver/GameOver";
+import Grid from "./Grid/Grid";
+import Timer from "./Timer/Timer";
+import Tiles from "./Tiles/Tiles";
+import { useInput } from "./InputContext";
+import Header from "../Header/Header";
+import GameOver from "./GameOver/GameOver";
 
 const mulberry32 = (seed: number) => {
   return function () {
@@ -125,8 +125,7 @@ function MainGame({ dailyChallenge }: Props) {
   }, [dailyChallenge]);
 
   return (
-    <div className="bg-sky-100 h-dvh w-screen flex flex-col justify-around items-center gap-10">
-      <Header dailyChallenge={dailyChallenge} />
+    <div>
       {gameOver ? (
         <>
           <GameOver
