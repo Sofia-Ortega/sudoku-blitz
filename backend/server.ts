@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { randomBytes } from "node:crypto";
+import { EVENTS } from "./constants";
 
 const PORT = 3000;
 
@@ -19,13 +20,7 @@ io.listen(4000);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const rooms: Record<
-  string,
-  {
-    users: Set<string>;
-    messages: { id: string; text: string; timestamp: number }[];
-  }
-> = {};
+const rooms: IRooms = {};
 
 app.get("/", (req: Request, res: Response) => {
   res.sendFile(join(__dirname, "index.html"));
@@ -37,40 +32,72 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on("create-room", () => {
-    console.log("Creating room");
-    const roomId = randomBytes(3).toString("hex");
-    rooms[roomId] = { users: new Set(), messages: [] };
-    rooms[roomId].users.add(socket.id);
-    socket.join(roomId);
+  socket.on(
+    EVENTS.CREATE_ROOM,
+    (nickname: string, callback: ICreateRoomCallback) => {
+      console.log("Creating room");
 
-    socket.emit("room-created", roomId);
-  });
+      const hostUser: IUser = {
+        socketId: socket.id,
+        nickname: nickname,
+        score: 0,
+      };
 
-  socket.on("join-room", (roomId: string) => {
-    console.log("Attempting to join room: ", roomId);
-    const room = rooms[roomId];
-    if (!room) {
-      socket.emit("error", "Room does not exist");
-      return;
+      const newRoomMetadata: IRoomMetadata = {
+        hostSocketId: socket.id,
+        users: new Set([hostUser]),
+      };
+
+      const roomId = randomBytes(3).toString("hex");
+      rooms[roomId] = newRoomMetadata;
+
+      socket.join(roomId);
+
+      callback({
+        roomId: roomId,
+      });
     }
+  );
 
-    if (room.users.size >= 4) {
-      socket.emit("error", "Room is full");
-      return;
+  socket.on(
+    EVENTS.JOIN_ROOM,
+    (roomId: string, nickname: string, callback: IJoinRoomCallback) => {
+      console.log("Processing request to join room: ", roomId);
+      const room: IRoomMetadata | undefined = rooms[roomId];
+      if (!room) {
+        callback({
+          success: false,
+          error: "Room does not exist",
+        });
+        return;
+      }
+
+      if (room.users.size >= 4) {
+        callback({
+          success: false,
+          error: "Room is full",
+        });
+        return;
+      }
+
+      const myUser: IUser = {
+        socketId: socket.id,
+        nickname: nickname,
+        score: 0,
+      };
+
+      socket.join(roomId);
+
+      console.log("User now in room ", roomId);
+
+      callback({
+        success: true,
+        users: room.users,
+      });
+
+      room.users.add(myUser);
     }
-
-    room.users.add(socket.id);
-    socket.join(roomId);
-
-    console.log("User now in room ", roomId);
-
-    socket.emit("joined-room", roomId);
-  });
-
-  socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
-  });
+  );
 });
 
 server.listen(PORT, () => {

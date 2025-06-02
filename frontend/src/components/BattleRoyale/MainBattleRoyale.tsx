@@ -60,7 +60,9 @@ export default function MainBattleRoyale() {
 
   const createRoom = () => {
     console.log("Creating Room");
-    socket.emit("create-room");
+    socket.emit("create-room", (resp: { roomId: string }) => {
+      setRoomId(resp.roomId);
+    });
   };
 
   const btnClassName = "border-1 w-32 h-8 border-blue-800 rounded-md shadow-sm";
