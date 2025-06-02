@@ -14,7 +14,7 @@ export default function SettingsIcon() {
         stroke="#656565"
         stroke-width="1.5"
         stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         fill-rule="evenodd"
@@ -23,7 +23,7 @@ export default function SettingsIcon() {
         stroke="#656565"
         stroke-width="1.5"
         stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

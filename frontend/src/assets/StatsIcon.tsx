@@ -12,14 +12,14 @@ export default function StatsIcon() {
         stroke="#656565"
         stroke-width="2"
         stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <path
         d="M18 9L13 13.9999L10.5 11.4998L7 14.9998"
         stroke="#656565"
         stroke-width="2"
         stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

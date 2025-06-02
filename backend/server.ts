@@ -38,6 +38,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("create-room", () => {
+    console.log("Creating room");
     const roomId = randomBytes(3).toString("hex");
     rooms[roomId] = { users: new Set(), messages: [] };
     rooms[roomId].users.add(socket.id);
@@ -46,7 +47,8 @@ io.on("connection", (socket) => {
     socket.emit("room-created", roomId);
   });
 
-  socket.on("join-rooms", (roomId: string) => {
+  socket.on("join-room", (roomId: string) => {
+    console.log("Attempting to join room: ", roomId);
     const room = rooms[roomId];
     if (!room) {
       socket.emit("error", "Room does not exist");
@@ -62,6 +64,8 @@ io.on("connection", (socket) => {
     socket.join(roomId);
 
     console.log("User now in room ", roomId);
+
+    socket.emit("joined-room", roomId);
   });
 
   socket.on("chat message", (msg) => {
