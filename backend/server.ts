@@ -86,7 +86,7 @@ io.on("connection", (socket) => {
 
       callback({
         success: true,
-        users: room.users,
+        users: [...room.users],
       });
 
       room.users.add(myUser);

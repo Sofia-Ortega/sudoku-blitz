@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { socket } from "./sockets/socket";
 import { SOCKET_EVENTS } from "./sockets/constants";
-import { socket_create_room, join_room } from "./sockets/events";
+import {
+  socket_create_room,
+  join_room,
+  socket_join_room,
+} from "./sockets/events";
+import { IUser } from "./types";
 
 export default function MainBattleRoyale() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [nickname, setNickname] = useState<string>("");
   const [score, setScore] = useState<number>(0);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [userInputRoomId, setUserInputRoomId] = useState("");
   const [roomId, setRoomId] = useState<null | string>(null);
 
@@ -36,11 +42,6 @@ export default function MainBattleRoyale() {
     }
   };
 
-  const joinRoom = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    socket.emit(SOCKET_EVENTS.JOIN_ROOM, userInputRoomId);
-  };
-
   const addScore = () => {
     setScore((p) => p + 1);
   };
@@ -58,9 +59,34 @@ export default function MainBattleRoyale() {
 
     console.log("Creating Room");
     const newRoomId = await socket_create_room(socket, nickname);
-
-    console.log("new room id:", newRoomId);
     setRoomId(newRoomId);
+  };
+
+  const joinRoom = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!nickname) {
+      console.error("Include a nickname");
+      return;
+    }
+    if (!userInputRoomId) {
+      console.error("Include user room id");
+      return;
+    }
+
+    try {
+      const theUsers: IUser[] = await socket_join_room(
+        socket,
+        userInputRoomId,
+        nickname
+      );
+
+      setUsers(theUsers);
+      setRoomId(userInputRoomId);
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error("Join Room Error: ", e.message);
+      }
+    }
   };
 
   const btnClassName = "border-1 w-32 h-8 border-blue-800 rounded-md shadow-sm";
@@ -89,19 +115,25 @@ export default function MainBattleRoyale() {
         </form>
         {roomId && <div>Room Id: {roomId}</div>}
       </div>
-      <form onSubmit={joinRoom} className="flex gap-2">
-        <input
-          type="text"
-          value={userInputRoomId}
-          onChange={(e) => setUserInputRoomId(e.target.value)}
-          placeholder="Enter Room Number"
-          className="border-1 px-2"
-        />
-        <button type="submit" className={btnClassName}>
-          Enter Room
-        </button>
-      </form>
-
+      <div>
+        <form onSubmit={joinRoom} className="flex gap-2">
+          <input
+            type="text"
+            value={userInputRoomId}
+            onChange={(e) => setUserInputRoomId(e.target.value)}
+            placeholder="Enter Room Number"
+            className="border-1 px-2"
+          />
+          <button type="submit" className={btnClassName}>
+            Enter Room
+          </button>
+        </form>
+        <div>
+          {users.map((user) => (
+            <div>{user.nickname}</div>
+          ))}
+        </div>
+      </div>
       <div>
         <div>Score: {score}</div>
         <div className="flex gap-1">
