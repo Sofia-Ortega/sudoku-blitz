@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { socket } from "./sockets/socket";
 import { SOCKET_EVENTS } from "./sockets/constants";
-import {
-  socket_create_room,
-  join_room,
-  socket_join_room,
-} from "./sockets/events";
+import { socket_create_room, socket_join_room } from "./sockets/events";
 import { IUser } from "./types";
 
 export default function MainBattleRoyale() {
@@ -25,12 +21,18 @@ export default function MainBattleRoyale() {
       setIsConnected(false);
     }
 
+    function onUserJoinedRoom(user: IUser) {
+      setUsers((prev) => [...prev, user]);
+    }
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on(SOCKET_EVENTS.USER_JOINED_ROOM, onUserJoinedRoom);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
+      socket.off(SOCKET_EVENTS.USER_JOINED_ROOM, onUserJoinedRoom);
     };
   }, []);
 

@@ -1,8 +1,6 @@
 import express, { Request, Response } from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { randomBytes } from "node:crypto";
 import { EVENTS } from "./constants";
 
@@ -86,7 +84,12 @@ io.on("connection", (socket) => {
 
       callback({
         success: true,
-        users: [...room.users],
+        users: [...room.users, myUser],
+      });
+
+      // notify other room members of new user that has arrived
+      room.users.forEach((user) => {
+        io.to(user.socketId).emit(EVENTS.USER_JOINED_ROOM, myUser);
       });
 
       room.users.add(myUser);
