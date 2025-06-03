@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { socket } from "./sockets/socket";
+import { SOCKET_EVENTS } from "./sockets/constants";
+import { socket_create_room, join_room } from "./sockets/events";
 
 export default function MainBattleRoyale() {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [nickname, setNickname] = useState<string>("");
   const [score, setScore] = useState<number>(0);
   const [userInputRoomId, setUserInputRoomId] = useState("");
   const [roomId, setRoomId] = useState<null | string>(null);
@@ -18,22 +21,10 @@ export default function MainBattleRoyale() {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("room-created", (msg) => {
-      setRoomId(msg);
-    });
-    socket.on("joined-room", (msg) => {
-      setRoomId(msg);
-    });
-    socket.on("error", (msg) => {
-      console.log(`ERROR: ${msg}`);
-    });
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("room-created");
-      socket.off("joined-room");
-      socket.off("error");
     };
   }, []);
 
@@ -47,7 +38,7 @@ export default function MainBattleRoyale() {
 
   const joinRoom = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit("join-room", userInputRoomId);
+    socket.emit(SOCKET_EVENTS.JOIN_ROOM, userInputRoomId);
   };
 
   const addScore = () => {
@@ -58,11 +49,18 @@ export default function MainBattleRoyale() {
     setScore((p) => p - 1);
   };
 
-  const createRoom = () => {
+  const createRoom = async (e: React.FocusEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!nickname) {
+      console.error("Include a nickname");
+      return;
+    }
+
     console.log("Creating Room");
-    socket.emit("create-room", (resp: { roomId: string }) => {
-      setRoomId(resp.roomId);
-    });
+    const newRoomId = await socket_create_room(socket, nickname);
+
+    console.log("new room id:", newRoomId);
+    setRoomId(newRoomId);
   };
 
   const btnClassName = "border-1 w-32 h-8 border-blue-800 rounded-md shadow-sm";
@@ -77,9 +75,18 @@ export default function MainBattleRoyale() {
         </button>
       </div>
       <div>
-        <button className={btnClassName} onClick={createRoom}>
-          Create Room
-        </button>
+        <form onSubmit={createRoom} className="flex gap-2">
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="Enter Nickname"
+            className="border-1 px-2"
+          />
+          <button type="submit" className={btnClassName}>
+            Create Room
+          </button>
+        </form>
         {roomId && <div>Room Id: {roomId}</div>}
       </div>
       <form onSubmit={joinRoom} className="flex gap-2">

@@ -18,13 +18,7 @@ const io = new Server(server, {
 
 io.listen(4000);
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const rooms: IRooms = {};
-
-app.get("/", (req: Request, res: Response) => {
-  res.sendFile(join(__dirname, "index.html"));
-});
 
 io.on("connection", (socket) => {
   console.log("a user connected");
