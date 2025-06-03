@@ -6,7 +6,7 @@ interface IUser {
 
 interface IRoomMetadata {
   hostSocketId: string;
-  users: Set<IUser>;
+  users: IUser[];
 }
 
 type IRooms = Record<string, IRoomMetadata>;
@@ -18,3 +18,9 @@ type IJoinRoomCallback = (
     | { success: true; users: IUser[] }
     | { success: false; error: string }
 ) => void;
+
+type IStartGameCallback = (response: {
+  game_starting_timestamp: string;
+}) => void;
+
+type IGetScoresCallback = (response: { users: IUser[] }) => void;

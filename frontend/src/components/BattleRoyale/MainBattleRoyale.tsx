@@ -131,8 +131,10 @@ export default function MainBattleRoyale() {
           </button>
         </form>
         <div>
-          {users.map((user) => (
-            <div>{user.nickname}</div>
+          {users.map((user, idx) => (
+            <div key={idx}>
+              {user.nickname}: {user.score}
+            </div>
           ))}
         </div>
       </div>

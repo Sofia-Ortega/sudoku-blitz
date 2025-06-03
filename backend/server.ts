@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
 
       const newRoomMetadata: IRoomMetadata = {
         hostSocketId: socket.id,
-        users: new Set([hostUser]),
+        users: [hostUser],
       };
 
       const roomId = randomBytes(3).toString("hex");
@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
         return;
       }
 
-      if (room.users.size >= 4) {
+      if (room.users.length >= 4) {
         callback({
           success: false,
           error: "Room is full",
@@ -92,7 +92,41 @@ io.on("connection", (socket) => {
         io.to(user.socketId).emit(EVENTS.USER_JOINED_ROOM, myUser);
       });
 
-      room.users.add(myUser);
+      room.users.push(myUser);
+    }
+  );
+
+  socket.on(
+    EVENTS.START_GAME,
+    (roomId: string, callback: IStartGameCallback) => {
+      const game_starting_timestamp = new Date(Date.now() + 7000).toISOString();
+
+      rooms[roomId].users.forEach((user) => {
+        io.to(user.socketId).emit(
+          EVENTS.GAME_STARTING,
+          game_starting_timestamp
+        );
+      });
+
+      callback({
+        game_starting_timestamp: game_starting_timestamp,
+      });
+    }
+  );
+
+  socket.on(EVENTS.UPDATE_SCORE, (roomId: string, score: number) => {
+    const user = rooms[roomId].users.find((u) => u.socketId === socket.id);
+    if (user) {
+      user.score = score;
+    }
+  });
+
+  socket.on(
+    EVENTS.GET_SCORES,
+    (roomId: string, callback: IGetScoresCallback) => {
+      callback({
+        users: rooms[roomId].users,
+      });
     }
   );
 });
